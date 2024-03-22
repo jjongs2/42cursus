@@ -1,0 +1,9 @@
+[submodule "09_cub3d"]
+	path = 09_cub3d
+	url = https://github.com/yubinquitous/cub3D.git
+[submodule "14_webserv"]
+	path = 14_webserv
+	url = https://github.com/SOONG-E/Webserv
+[submodule "15_ft_transcendence"]
+	path = 15_ft_transcendence
+	url = https://github.com/wjcheon96/6uidpong.git

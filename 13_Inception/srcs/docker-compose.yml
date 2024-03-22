@@ -1,0 +1,146 @@
+version: "3.7"
+
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /home/$USER/data/mariadb
+
+  wordpress:
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /home/$USER/data/wordpress
+
+  portainer:
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /home/$USER/data/portainer
+
+  website:
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /home/$USER/data/website
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file: .env
+    image: mariadb
+    networks:
+      - inception
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    depends_on:
+      - wordpress
+    env_file: .env
+    image: nginx
+    networks:
+      - inception
+    ports:
+      - "443:443"
+    restart: always
+    volumes:
+      - wordpress:/var/www/wordpress
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    depends_on:
+      - mariadb
+      - redis
+    env_file: .env
+    image: wordpress
+    networks:
+      - inception
+    restart: always
+    volumes:
+      - wordpress:/var/www/wordpress
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    depends_on:
+      - mariadb
+    image: adminer
+    networks:
+      - inception
+    ports:
+      - "8080:8080"
+    restart: always
+
+  cadvisor:
+    build: ./requirements/bonus/cadvisor
+    container_name: cadvisor
+    image: cadvisor
+    ports:
+      - "8090:8080"
+    privileged: true
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro 
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+
+  portainer:
+    build: ./requirements/bonus/portainer
+    container_name: portainer
+    image: portainer
+    ports:
+      - "9443:9443"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    image: redis
+    networks:
+      - inception
+    restart: always
+
+  vsftpd:
+    build:
+      args:
+        FTP_USER: $FTP_USER
+        FTP_PASSWORD: $FTP_PASSWORD
+      context: ./requirements/bonus/vsftpd
+      dockerfile: Dockerfile
+    container_name: vsftpd
+    image: vsftpd
+    ports:
+      - "21:21"
+    restart: always
+    volumes:
+      - wordpress:/var/www/wordpress
+
+  website:
+    build: ./requirements/bonus/website
+    container_name: website
+    image: website
+    ports:
+      - "4000:4000"
+    restart: always
+    volumes:
+      - website:/var/www/blog
