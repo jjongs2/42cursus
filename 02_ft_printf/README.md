@@ -13,7 +13,12 @@
 
 ## Summary
 
-**ft_printf**는 C 표준 함수인 `printf()` 함수를 재구현하는 프로젝트입니다.
+**ft_printf**는 C 표준 함수인 `printf()`를 재구현하는 프로젝트입니다.
+
+### Learning Objectives
+
+- 가변 인자 리스트의 사용법을 배웁니다.
+- `printf()`의 작동 원리를 이해합니다.
 
 ### Instructions
 

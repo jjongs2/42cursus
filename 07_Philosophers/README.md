@@ -16,6 +16,13 @@
 
 **Philosophers**는 [식사하는 철학자 문제](https://en.wikipedia.org/wiki/Dining_philosophers_problem)를 해결하는 프로젝트입니다.
 
+### Learning Objectives
+
+- 스레드/프로세스를 생성하고 사용하는 방법을 배웁니다.
+- 뮤텍스/세마포어의 개념과 사용법을 배웁니다.
+- 동시성, 교착 상태와 같은 문제들을 이해하고 해결합니다.
+- 스레드와 프로세스의 차이를 이해합니다.
+
 ### Instructions
 
 - 프로젝트는 C 언어로 작성되어야 합니다.
